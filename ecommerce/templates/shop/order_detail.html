@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h2>Order #{{ order.id }}</h2>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <p><strong>Order Date:</strong> {{ order.created_at|date:"F j, Y H:i" }}</p>
+                <p><strong>Status:</strong> <span class="badge bg-success">Completed</span></p>
+            </div>
+            <div class="col-md-6 text-end">
+                <h3>Total: RS.{{ order.total_amount|floatformat:2 }}</h3>
+            </div>
+        </div>
+
+        <h4 class="mb-3">Order Items</h4>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.orderitem_set.all %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="{{ item.product.image.url }}" class="img-thumbnail me-3" style="width: 60px; height: 60px; object-fit: contain;">
+                                <span>{{ item.product.name }}</span>
+                            </div>
+                        </td>
+                        <td>RS.{{ item.price|floatformat:2 }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>RS.{{ item.get_total|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'order-history' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Orders
+        </a>
+    </div>
+</div>
+{% endblock %}
